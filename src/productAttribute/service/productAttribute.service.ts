@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { productAttributes, ProductAttributesSchema } from "../schema/productAttributes.schema";
 import { createProductAttributeDto } from "../dto/productAttributeDto";
-import { Model, ObjectId } from "mongoose";
+import { Model, ObjectId, Types } from "mongoose";
 import {  TTSPDto } from "../dto/TTSP.dto";
 
 
@@ -24,25 +24,25 @@ export class productAttributesService {
             return result;
         }
     
-        async findById(id: ObjectId) {
-            const result = await this.productAttributesModel.findOne({ _id: id }).exec();
+        async findById(id: string) {
+            const result = await this.productAttributesModel.findOne({_id: new Types.ObjectId(id)}).exec();
             if(!result){
                 throw new Error('Attribute not found');
             }
             return result;
         }
     
-        async update(productAttribute: createProductAttributeDto, id: ObjectId) {
+        async update(productAttribute: createProductAttributeDto, id: string) {
 
-            const result = await this.productAttributesModel.updateOne({_id: id}, { $set: productAttribute} ).exec();
+            const result = await this.productAttributesModel.updateOne({_id: new Types.ObjectId(id)}, { $set: productAttribute} ).exec();
             if(result.modifiedCount === 0){
                 throw new Error('Attribute not found');
             }
             return "Update attribute successfully";
         }
         
-        async delete(id: ObjectId) {
-            const result = this.productAttributesModel.findOneAndDelete({_id: id}).exec();
+        async delete(id: string) {
+            const result = this.productAttributesModel.findOneAndDelete({_id: new Types.ObjectId(id)}).exec();
             if(!result){
                 throw new Error('Attribute not found');
             }
@@ -53,8 +53,8 @@ export class productAttributesService {
             return Promise.all(
                 tTSPDto.map(async (ttsp) => {
                     const data = await this.findById(ttsp.thuocTinh_CTSP); 
-                    const {tenTT, nganhHangTT, kieuGiaTriTT, batBuocTT } = data;
-                    return { ...ttsp, tenTT, nganhHangTT, kieuGiaTriTT, batBuocTT }; 
+                    const {ten_TT, kieuGiaTri_TT, batBuoc_TT } = data;
+                    return { ...ttsp, ten_TT, kieuGiaTri_TT, batBuoc_TT }; 
                 })
             );
         }

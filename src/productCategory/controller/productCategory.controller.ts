@@ -2,37 +2,34 @@ import { Body, Controller, Delete, Get, Post, Put, Param, ParseIntPipe } from "@
 import { productCategoryService } from "../service/productCategory.service";
 import { createProductCategoryDto } from "../dto/productCategoryDto";
 import { ObjectId } from "mongoose";
+import { MessagePattern, Payload } from "@nestjs/microservices";
 
 @Controller('products/categories')
 export class productCategoryController {
     
     constructor(private readonly productCategoryService: productCategoryService){}
-    @Get()
-    async getProductCategory() {
+    @MessagePattern('get_product_categories')
+    async getProductCategory(@Payload() data: any) {
         return this.productCategoryService.findAll();
     }
     
-    @Post()
-    async addProductCategory(@Body() createProductCategoryDto: createProductCategoryDto ) {
-        return this.productCategoryService.create(createProductCategoryDto);
+    @MessagePattern('add_product_category')
+    async addProductCategory(@Payload() productCategory: createProductCategoryDto) {
+        return this.productCategoryService.create(productCategory);
     }
     
-    @Get(':id')
-    async getProductCategoryById(@Param('id') id: ObjectId) {
+    @MessagePattern('get_product_category_by_id')
+    async getProductCategoryById(@Payload() id: string) {
         return this.productCategoryService.findById(id);
     }
     
-    @Put(':id')
-    async updateProductCategoryById(@Body() createProductCategoryDto: createProductCategoryDto, @Param('id') id: ObjectId) {
-        return this.productCategoryService.update(createProductCategoryDto, id);
+    @MessagePattern('update_product_category')
+    async updateProductCategory(@Payload() data: any) {
+        return this.productCategoryService.update(data.category, data.id);
     }
     
-    @Delete(':id')
-    async deleteProductCategoryById(@Param('id') id: ObjectId) {
+    @MessagePattern('delete_product_category')
+    async deleteProductCategory(@Payload() id: string) {
         return this.productCategoryService.delete(id);
-    }
-    @Get('/parentCategory/:id')
-    async findParentCategory(@Param('id') id: ObjectId) {
-        return this.productCategoryService.findParent(id);
     }
 }

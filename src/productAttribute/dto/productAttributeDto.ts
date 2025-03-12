@@ -1,6 +1,5 @@
 export class createProductAttributeDto {
-    tenTT: string;
-    nganhHangTT: string;
-    kieuGiaTriTT: string;
-    batBuocTT: boolean;
+    ten_TT: string;
+    kieuGiaTri_TT: string;
+    batBuoc_TT: boolean;
 }

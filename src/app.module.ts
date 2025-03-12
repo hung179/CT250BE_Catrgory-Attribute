@@ -3,11 +3,13 @@ import { productCategoryModule } from './productCategory/modules/productCategory
 import { MongooseModule } from '@nestjs/mongoose';
 import { productAttributeModule } from './productAttribute/module/productAttribute.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
     productAttributeModule,
     productCategoryModule,
+    RedisModule,
       ConfigModule.forRoot({
         isGlobal: true,
       }),

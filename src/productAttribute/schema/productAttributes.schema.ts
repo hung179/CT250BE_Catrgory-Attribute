@@ -5,16 +5,15 @@ export type ProductAttributesSchema = HydratedDocument<productAttributes>;
 @Schema() 
 export class productAttributes {
     @Prop({ required: true })
-    tenTT: string;
-    
-    @Prop({ default:null})
-    nganhHangTT: ObjectId;
+    ten_TT: string;
 
     @Prop({ default: 'string'})
-    kieuGiaTriTT: string;
+    kieuGiaTri_TT: string;
     
     @Prop({default: false})
-    batBuocTT: boolean;
+    batBuoc_TT: boolean;
 }
+
+
 
 export const productAttributesSchema = SchemaFactory.createForClass(productAttributes);
