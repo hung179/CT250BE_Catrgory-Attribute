@@ -15,63 +15,78 @@ export class productCategoryService {
   ) {}
 
   async create(productCategory: createProductCategoryDto) {
-    const newProductCategory = new this.productCategoriesModel(productCategory);
-    return newProductCategory.save();
+    try {
+      const newProductCategory = new this.productCategoriesModel(
+        productCategory,
+      );
+      newProductCategory.save();
+      return { success: true, data: newProductCategory };
+    } catch (error) {
+      return { success: false, error: error };
+    }
   }
   async findAll() {
-    const categories = await this.productCategoriesModel.find().exec();
+    try {
+      const categories = await this.productCategoriesModel.find().exec();
 
-    // Chuyển danh sách thành object để truy xuất nhanh
-    const categoryMap = categories.reduce((acc, category) => {
-      acc[category._id.toString()] = { ...category.toObject(), children: [] };
-      return acc;
-    }, {});
+      // Chuyển danh sách thành object để truy xuất nhanh
+      const categoryMap = categories.reduce((acc, category) => {
+        acc[category._id.toString()] = { ...category.toObject(), children: [] };
+        return acc;
+      }, {});
 
-    // Tạo danh sách với cấu trúc cây
-    return categories
-      .map((category) => {
-        if (category.nganhHangCha_NH) {
-          // Thêm vào children của danh mục cha
-          categoryMap[category.nganhHangCha_NH]?.children.push(
-            categoryMap[category._id.toString()],
-          );
-          return null; // Bỏ category con khỏi danh sách chính
-        }
-        return categoryMap[category._id.toString()]; // Chỉ giữ category cha
-      })
-      .filter(Boolean); // Loại bỏ giá trị `null`
+      // Tạo danh sách với cấu trúc cây
+      const result = categories
+        .map((category) => {
+          if (category.nganhHangCha_NH) {
+            // Thêm vào children của danh mục cha
+            categoryMap[category.nganhHangCha_NH]?.children.push(
+              categoryMap[category._id.toString()],
+            );
+            return null; // Bỏ category con khỏi danh sách chính
+          }
+          return categoryMap[category._id.toString()]; // Chỉ giữ category cha
+        })
+        .filter(Boolean); // Loại bỏ giá trị `null`
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error: error };
+    }
   }
 
   async findById(id: string) {
-    const result = await this.productCategoriesModel
-      .findById({ _id: new Types.ObjectId(id) })
-      .exec();
-    if (!result) {
-      throw new Error('Product Category not found');
+    try {
+      const result = await this.productCategoriesModel
+        .findById({ _id: new Types.ObjectId(id) })
+        .exec();
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error: error };
     }
-    return result;
   }
 
   async update(productCategory: createProductCategoryDto, id: string) {
-    const result = await this.productCategoriesModel
-      .findByIdAndUpdate(
-        { _id: new Types.ObjectId(id) },
-        { $set: productCategory },
-      )
-      .exec();
-    if (!result) {
-      throw new Error('Product Category not found');
+    try {
+      const result = await this.productCategoriesModel
+        .findByIdAndUpdate(
+          { _id: new Types.ObjectId(id) },
+          { $set: productCategory },
+        )
+        .exec();
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error: error };
     }
-    return 'Update product category successfully';
   }
 
   async delete(id: string) {
-    const result = this.productCategoriesModel
-      .findByIdAndDelete({ _id: new Types.ObjectId(id) })
-      .exec();
-    if (!result) {
-      throw new Error('Product Category not found');
+    try {
+      const result = this.productCategoriesModel
+        .findByIdAndDelete({ _id: new Types.ObjectId(id) })
+        .exec();
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error: error };
     }
-    return 'Delete product category successfully';
   }
 }

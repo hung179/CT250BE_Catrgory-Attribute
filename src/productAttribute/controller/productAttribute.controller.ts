@@ -9,35 +9,7 @@ import { MessagePattern, Payload } from "@nestjs/microservices";
 export class productAttributeController {
     
     constructor(private readonly productAttributeService: productAttributesService){}
-    // @Get()
-    // async getProductAttribute() {
-    //     return this.productAttributeService.findAll();
-    // }
-    
-    // @Post()
-    // async addProductAttribute(@Body() productAttributeDto: createProductAttributeDto ) {
-    //     return this.productAttributeService.create(productAttributeDto);
-    // }
-    
-    // @Get(':id')
-    // async getProductAttributeById(@Param('id', ParseIntPipe) id: ObjectId) {
-    //     return this.productAttributeService.findById(id);
-    // }
-    
-    // @Put(':id')
-    // async updateProductAttributeById(@Body() productAttributeDto: createProductAttributeDto, @Param('id') id: ObjectId) {
-    //     return this.productAttributeService.update(productAttributeDto, id);
-    // }
-    
-    // @Delete(':id')
-    // async deleteProductAttributeById(@Param('id') id: ObjectId) {
-    //     return this.productAttributeService.delete(id);
-    // }
-    // @Post('/getAttribute')
-    // async getProductAttributeByArrayObject(@Body() tTSPDto: TTSPDto[]) {
-    //     return this.productAttributeService.getByArrayObject(tTSPDto);
-    // }
-    // Thêm getAll của một ngành hàng
+
     @MessagePattern('attribute_get_all')
     async getAllAttribute(@Payload() data: any){
         return this.productAttributeService.findAll();
@@ -61,8 +33,8 @@ export class productAttributeController {
     }
     // Lấy thuộc tính từ một mảng gồm id thuộc tính và các giá trị truyền vào
     @MessagePattern('attribute_get_by_array')
-    async getByArrayObject(@Payload() tTSPDto : TTSPDto[]){
-        return this.productAttributeService.getByArrayObject(tTSPDto);
+    async getByArrayObject(@Payload() data : any){
+        return this.productAttributeService.getByArrayObject(data.tTSPDto);
     }
 
 }
