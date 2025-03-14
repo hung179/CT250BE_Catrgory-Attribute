@@ -62,7 +62,6 @@ export class productCategoryService {
           { new: true },
         )
         .exec();
-      console.log(result);
       return { success: true, data: result };
     } catch (error) {
       return { success: false, error: error };
