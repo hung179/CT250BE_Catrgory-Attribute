@@ -5,7 +5,7 @@ import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 @Injectable()
 export class RedisService {
   constructor(
-    @Inject('REDIS_CLIENT') private readonly redisClient: ClientProxy
+    @Inject('REDIS_CLIENT') private readonly redisClient: ClientProxy,
   ) {}
 
   // 🔥 Gửi sự kiện (Fire-and-Forget)
@@ -16,7 +16,7 @@ export class RedisService {
   // 🔥 Gửi request và chờ phản hồi (Request-Response)
   async requestResponse<T>(
     channel: string,
-    message: any
+    message?: any,
   ): Promise<{ success: boolean; data?: T; error?: any }> {
     return lastValueFrom(this.redisClient.send(channel, message));
   }
